@@ -3,12 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Dashboard</title>
-  
 </head>
 
 <body class="bg-gray-900 text-gray-100 min-h-screen">
 
-  <!-- Header -->
   <header class="bg-gray-800 p-4 flex justify-between items-center">
     <h1 class="text-xl font-bold">Dashboard</h1>
     <button onclick="logout()"
@@ -17,7 +15,6 @@
     </button>
   </header>
 
-  <!-- Content -->
   <main class="p-6">
     <div class="bg-gray-800 rounded-xl p-6 max-w-xl mx-auto shadow">
       <h2 class="text-lg font-semibold mb-2">User Info</h2>
@@ -25,35 +22,37 @@
     </div>
   </main>
 
-  
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Supabase UMD -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+
+
   <script>
     async function checkUser() {
-      const { data } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
 
-      if (!data.user) {
+      if (!user) {
         window.location.href = "login.html";
       } else {
         document.getElementById("userEmail").innerText =
-          "Logged in as: " + data.user.email;
+          "Logged in as: " + user.email;
       }
     }
 
     async function logout() {
-      await supabase.auth.signOut();
-      window.location.href = "login.html";
+      const { error } = await supabase.auth.signOut();
+      if (!error) {
+        window.location.href = "login.html";
+      } else {
+        console.error("Logout failed:", error.message);
+      }
     }
 
     checkUser();
   </script>
-
-  <!-- Tailwind -->
-<script src="https://cdn.tailwindcss.com"></script>
-
-<!-- Supabase UMD -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-
-<!-- Your client -->
-<script src="./supabase.js"></script>
   
 </body>
 </html>
