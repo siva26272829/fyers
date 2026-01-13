@@ -32,31 +32,44 @@
 
   <script>
     async function checkUser() {
-      if (!supabase || !supabase.auth) {
-    console.error("Supabase client is not initialized!");
+  if (!window.supabaseClient) {
+    console.error("Supabase client not ready");
     return;
   }
-      const { data: { user } } = await supabase.auth.getUser();
 
-      if (!user) {
-        window.location.href = "login.html";
-      } else {
-        document.getElementById("userEmail").innerText =
-          "Logged in as: " + user.email;
-      }
-    }
+  const { data: { user } } =
+    await supabaseClient.auth.getUser();
+
+  if (!user) {
+    window.location.href = "login.html";
+  } else {
+    document.getElementById("userEmail").innerText =
+      "Logged in as: " + user.email;
+  }
+}
+
 
     async function logout() {
-      const { error } = await supabase.auth.signOut();
-      if (!error) {
-        window.location.href = "login.html";
-      } else {
-        console.error("Logout failed:", error.message);
-      }
-    }
+  await supabaseClient.auth.signOut();
+  window.location.href = "login.html";
+}
 
-    checkUser();
+   
   </script>
+
+  <!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Supabase UMD -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+<!-- Your client -->
+<script src="./supabase.js"></script>
+
+<!-- Your page logic -->
+<script>
+  checkUser();
+</script>
   
 </body>
 </html>
