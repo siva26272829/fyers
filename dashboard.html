@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-gray-800 p-4 flex justify-between items-center">
+    <h1 class="text-xl font-bold">Dashboard</h1>
+    <button onclick="logout()"
+      class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded">
+      Logout
+    </button>
+  </header>
+
+  <!-- Content -->
+  <main class="p-6">
+    <div class="bg-gray-800 rounded-xl p-6 max-w-xl mx-auto shadow">
+      <h2 class="text-lg font-semibold mb-2">User Info</h2>
+      <p id="userEmail" class="text-gray-400"></p>
+    </div>
+  </main>
+
+  <!-- Supabase -->
+  <script src="supabase.js"></script>
+  <script>
+    async function checkUser() {
+      const { data } = await supabase.auth.getUser();
+
+      if (!data.user) {
+        window.location.href = "login.html";
+      } else {
+        document.getElementById("userEmail").innerText =
+          "Logged in as: " + data.user.email;
+      }
+    }
+
+    async function logout() {
+      await supabase.auth.signOut();
+      window.location.href = "login.html";
+    }
+
+    checkUser();
+  </script>
+
+</body>
+</html>
