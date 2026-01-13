@@ -32,6 +32,10 @@
 
   <script>
     async function checkUser() {
+      if (!supabase || !supabase.auth) {
+    console.error("Supabase client is not initialized!");
+    return;
+  }
       const { data: { user } } = await supabase.auth.getUser();
 
       if (!user) {
